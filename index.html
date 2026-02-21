@@ -2,30 +2,29 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<title>Middagshjälpen – Veckoplan & barnvänliga middagar</title>
+<title>Middagshjälpen – Barnvänliga vardagsmiddagar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Gratis veckoplan och barnvänliga vardagsmiddagar. Slipp planera – få färdiga middagsförslag och inköpslista direkt.">
+<meta name="description" content="Gratis veckoplan och barnvänliga vardagsmiddagar för familjer.">
 
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:850px;margin:40px auto;padding:20px;background:#f8fafc;color:#222}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f8fafc}
 h1{margin-bottom:5px}
 .subtitle{color:#666;margin-bottom:25px}
 input,select{padding:10px;width:100%;margin-bottom:15px;border:1px solid #ddd;border-radius:8px}
-button{padding:12px 20px;border:none;border-radius:10px;cursor:pointer;font-size:14px;margin-right:10px;margin-top:5px}
+button{padding:12px 20px;border:none;border-radius:10px;cursor:pointer;margin-top:5px}
 .primary{background:#111;color:white}
 .secondary{background:#e5e7eb}
-.swish{background:#ffcc00;font-weight:bold}
 .card{margin-top:25px;padding:20px;border-radius:14px;background:white;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
 .meta{color:#666;font-size:14px}
-.footer{margin-top:60px;text-align:center;font-size:14px;color:#777}
-.premium{margin-top:40px;padding:20px;border-radius:14px;background:#111;color:white}
-ul{padding-left:20px}
+a{text-decoration:none;color:#111}
+.recipe-link{display:block;padding:8px 0}
+.footer{text-align:center;margin-top:60px;color:#777;font-size:14px}
 </style>
 </head>
 <body>
 
 <h1>🍽️ Middagshjälpen</h1>
-<p class="subtitle">Gratis veckoplan & barnvänliga vardagsmiddagar för stressade familjer.</p>
+<p class="subtitle">Slipp planera – få barnvänliga middagar och fullständiga recept.</p>
 
 <label>Max tid (min)</label>
 <input type="number" id="maxTime" value="45">
@@ -33,110 +32,110 @@ ul{padding-left:20px}
 <label>Max pris (kr per portion)</label>
 <input type="number" id="maxPrice" value="60">
 
-<label>Exkludera allergi</label>
-<select id="allergy">
-<option value="">Ingen</option>
-<option value="gluten">Gluten</option>
-<option value="laktos">Laktos</option>
-<option value="ägg">Ägg</option>
-<option value="nötter">Nötter</option>
-</select>
-
 <button class="primary" onclick="generateMeal()">Slumpa middag</button>
 <button class="secondary" onclick="generateWeek()">Skapa veckoplan</button>
 
 <div id="result"></div>
 
-<div class="premium">
-<h3>⭐ Premium (29 kr/mån)</h3>
-<p>✔ Spara veckoplan<br>
-✔ Anpassa familjestorlek<br>
-✔ Fler recept<br>
-✔ Inga annonser</p>
-</div>
-
 <div class="footer">
-<p>Gillar du tjänsten? Stötta projektet ☕</p>
+<p>Stötta projektet ☕</p>
 <a href="swish://payment?phone=46702683881&amount=20&message=Stöd till Middagshjälpen">
-<button class="swish">💛 Swisha 20 kr</button>
+<button class="primary">💛 Swisha 20 kr</button>
 </a>
-<p style="margin-top:20px;">© 2026 Middagshjälpen</p>
 </div>
 
 <script>
 
 const recipes=[
-{title:"Kycklinggryta",time:30,price:35,allergens:["laktos"],ingredients:["Kyckling","Grädde","Paprika","Ris"],instructions:"Stek kyckling och låt puttra med grädde."},
-{title:"Tacos",time:20,price:40,allergens:["gluten"],ingredients:["Köttfärs","Tacokrydda","Tortilla"],instructions:"Stek och servera i tortilla."},
-{title:"Korv Stroganoff",time:25,price:30,allergens:["laktos"],ingredients:["Falukorv","Grädde","Tomatpuré"],instructions:"Stek och låt puttra."},
-{title:"Spaghetti & köttfärssås",time:35,price:32,allergens:["gluten"],ingredients:["Köttfärs","Tomat","Spaghetti"],instructions:"Låt puttra 20 min."},
-{title:"Pannkakor",time:25,price:20,allergens:["gluten","ägg","laktos"],ingredients:["Mjöl","Mjölk","Ägg"],instructions:"Vispa och stek."},
-{title:"Hamburgare",time:25,price:45,allergens:["gluten"],ingredients:["Nötfärs","Bröd","Sallad"],instructions:"Stek och servera."},
-{title:"Fiskpinnar",time:20,price:28,allergens:["gluten"],ingredients:["Fiskpinnar","Potatis"],instructions:"Stek och servera."},
-{title:"Kycklingsallad",time:20,price:35,allergens:[],ingredients:["Kyckling","Sallad","Tomat"],instructions:"Blanda och servera."},
-{title:"Vegetarisk chili",time:35,price:27,allergens:[],ingredients:["Bönor","Tomat","Lök"],instructions:"Låt puttra."},
-{title:"Lasagne",time:45,price:40,allergens:["gluten","laktos"],ingredients:["Lasagneplattor","Köttfärs","Ost"],instructions:"Gratinera i ugn."},
-{title:"Carbonara",time:20,price:29,allergens:["gluten","ägg"],ingredients:["Pasta","Bacon","Ägg"],instructions:"Blanda snabbt."},
-{title:"Kyckling i ugn",time:40,price:38,allergens:[],ingredients:["Kyckling","Potatis"],instructions:"Tillaga i ugn."},
-{title:"Makaronilåda",time:35,price:28,allergens:["gluten","ägg","laktos"],ingredients:["Makaroner","Korv","Ägg"],instructions:"Baka i ugn."},
-{title:"Pytt i panna",time:20,price:24,allergens:["ägg"],ingredients:["Potatis","Korv","Ägg"],instructions:"Stek ihop."},
-{title:"Fiskgratäng",time:35,price:45,allergens:["laktos"],ingredients:["Fisk","Grädde","Potatis"],instructions:"Gratinera."}
+{
+id:"kycklinggryta",
+title:"Kycklinggryta med ris",
+time:30,
+price:35,
+ingredients:["600g kyckling","2 dl grädde","1 paprika","1 gul lök","Ris"],
+instructions:"1. Stek kyckling.\n2. Tillsätt paprika och lök.\n3. Häll på grädde och låt puttra 15 min.\n4. Servera med ris."
+},
+{
+id:"tacos",
+title:"Tacos",
+time:20,
+price:40,
+ingredients:["400g köttfärs","Tacokrydda","Tortilla","Sallad","Tomat"],
+instructions:"1. Stek köttfärs.\n2. Blanda med tacokrydda.\n3. Servera i tortilla med grönsaker."
+},
+{
+id:"korvstroganoff",
+title:"Korv Stroganoff",
+time:25,
+price:30,
+ingredients:["Falukorv","2 dl grädde","1 msk tomatpuré","Ris"],
+instructions:"1. Skär och stek korv.\n2. Tillsätt tomatpuré och grädde.\n3. Låt puttra 10 min.\n4. Servera med ris."
+}
 ];
 
-function filterRecipes(){
-const maxTime=parseInt(document.getElementById("maxTime").value);
-const maxPrice=parseInt(document.getElementById("maxPrice").value);
-const allergy=document.getElementById("allergy").value;
-
-return recipes.filter(r=>r.time<=maxTime && r.price<=maxPrice && (!allergy || !r.allergens.includes(allergy)));
+function getParams(){
+const params=new URLSearchParams(window.location.search);
+return params.get("recept");
 }
 
-function generateMeal(){
-const filtered=filterRecipes();
-if(filtered.length===0){document.getElementById("result").innerHTML="<p>Inga rätter matchar dina val.</p>";return;}
-const random=filtered[Math.floor(Math.random()*filtered.length)];
-renderSingle(random);
-}
+function showRecipeById(id){
+const recipe=recipes.find(r=>r.id===id);
+if(!recipe)return;
 
-function generateWeek(){
-const filtered=filterRecipes();
-if(filtered.length<5){document.getElementById("result").innerHTML="<p>För få recept för veckoplan.</p>";return;}
-let week=[];
-let copy=[...filtered];
-for(let i=0;i<7 && copy.length>0;i++){
-let index=Math.floor(Math.random()*copy.length);
-week.push(copy.splice(index,1)[0]);
-}
-renderWeek(week);
-}
+document.title=recipe.title+" – Middagshjälpen";
 
-function renderSingle(meal){
 document.getElementById("result").innerHTML=`
 <div class="card">
-<h2>${meal.title}</h2>
-<p class="meta">⏱ ${meal.time} min | 💰 ${meal.price} kr</p>
+<h2>${recipe.title}</h2>
+<p class="meta">⏱ ${recipe.time} min | 💰 ${recipe.price} kr</p>
+
 <h3>Ingredienser</h3>
-<ul>${meal.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
-<p>${meal.instructions}</p>
+<ul>${recipe.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
+
+<h3>Så lagar du</h3>
+<p>${recipe.instructions.replace(/\n/g,"<br>")}</p>
+
+<br>
 <a href="https://www.mathem.se" target="_blank">
 <button class="primary">🛒 Handla ingredienser online</button>
 </a>
-</div>`;
+
+<br><br>
+<a href="./">← Tillbaka</a>
+</div>
+`;
 }
 
-function renderWeek(week){
-let allIngredients=[...new Set(week.flatMap(r=>r.ingredients))];
+function generateMeal(){
+const maxTime=parseInt(document.getElementById("maxTime").value);
+const maxPrice=parseInt(document.getElementById("maxPrice").value);
+
+const filtered=recipes.filter(r=>r.time<=maxTime && r.price<=maxPrice);
+
+if(filtered.length===0){
+document.getElementById("result").innerHTML="<p>Inga rätter matchar dina val.</p>";
+return;
+}
+
+const random=filtered[Math.floor(Math.random()*filtered.length)];
+window.history.pushState({}, "", "?recept="+random.id);
+showRecipeById(random.id);
+}
+
+function generateWeek(){
+let week=[...recipes].sort(()=>0.5-Math.random()).slice(0,3);
 
 document.getElementById("result").innerHTML=`
 <div class="card">
 <h2>📅 Veckoplan</h2>
-${week.map((r,i)=>`<p><strong>Dag ${i+1}:</strong> ${r.title}</p>`).join("")}
-<h3>🛒 Samlad inköpslista</h3>
-<ul>${allIngredients.map(i=>`<li>${i}</li>`).join("")}</ul>
-<a href="https://www.mathem.se" target="_blank">
-<button class="primary">Handla allt online</button>
-</a>
-</div>`;
+${week.map(r=>`<a class="recipe-link" href="?recept=${r.id}">• ${r.title}</a>`).join("")}
+</div>
+`;
+}
+
+const recipeFromUrl=getParams();
+if(recipeFromUrl){
+showRecipeById(recipeFromUrl);
 }
 
 </script>
