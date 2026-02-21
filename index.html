@@ -2,57 +2,123 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
-  <title>Middagshjälpen</title>
+  <title>Middagshjälpen – Vardagsmat för familjer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 700px;
       margin: 40px auto;
       padding: 20px;
+      background: #fafafa;
+      color: #222;
     }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    p.subtitle {
+      color: #666;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    input {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
     button {
-      padding: 10px 20px;
-      background: black;
+      padding: 12px 20px;
+      background: #111;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 14px;
     }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
     .card {
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
+      margin-top: 25px;
+      padding: 20px;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      background: white;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .affiliate {
+      margin-top: 15px;
+    }
+
+    .support {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
 <h1>🍽️ Middagshjälpen</h1>
+<p class="subtitle">Snabba, barnvänliga vardagsmiddagar för stressade familjer.</p>
 
-<label>Max tid (min)</label><br>
-<input type="number" id="maxTime" value="60"><br><br>
+<label>Max tid (minuter)</label>
+<input type="number" id="maxTime" value="40">
 
-<label>Max pris (kr/portion)</label><br>
-<input type="number" id="maxPrice" value="50"><br><br>
+<label>Max pris (kr per portion)</label>
+<input type="number" id="maxPrice" value="50">
 
-<button onclick="generateMeal()">Slumpa middag</button>
+<button onclick="generateMeal()">Slumpa familjemiddag</button>
 
 <div id="result"></div>
+
+<div class="support">
+  Gillar du tjänsten? Stötta Middagshjälpen med en kaffe ☕ (Swish kommer snart)
+</div>
 
 <script>
 const recipes = [
   {
-    title: "Kycklinggryta med ris",
+    title: "Krämig kycklinggryta med ris",
     time: 30,
     price: 35,
-    ingredients: ["Kyckling", "Grädde", "Paprika", "Ris"],
-    instructions: "Stek kyckling. Tillsätt grönsaker och grädde. Låt puttra 15 min. Servera med ris."
+    ingredients: ["Kycklingfilé", "Grädde", "Paprika", "Lök", "Ris"],
+    instructions: "Stek kycklingen. Tillsätt grönsaker och grädde. Låt puttra i 15 minuter. Servera med ris."
   },
   {
-    title: "Tacos",
+    title: "Tacos (familjefavorit)",
     time: 20,
     price: 40,
-    ingredients: ["Köttfärs", "Tacokrydda", "Tortilla", "Sallad"],
-    instructions: "Stek köttfärs med krydda. Servera i tortillas med sallad."
+    ingredients: ["Köttfärs", "Tacokrydda", "Tortillabröd", "Sallad", "Tomat"],
+    instructions: "Stek köttfärs med tacokrydda. Servera med tortillas och grönsaker."
+  },
+  {
+    title: "Korv Stroganoff",
+    time: 25,
+    price: 30,
+    ingredients: ["Falakorv", "Lök", "Tomatpuré", "Grädde", "Ris"],
+    instructions: "Stek korv och lök. Tillsätt tomatpuré och grädde. Låt puttra 10 minuter. Servera med ris."
+  },
+  {
+    title: "Spaghetti med köttfärssås",
+    time: 35,
+    price: 32,
+    ingredients: ["Köttfärs", "Krossade tomater", "Lök", "Vitlök", "Spaghetti"],
+    instructions: "Stek köttfärs och lök. Tillsätt tomater och kryddor. Låt puttra. Servera med spaghetti."
   }
 ];
 
@@ -63,7 +129,7 @@ function generateMeal() {
   const filtered = recipes.filter(r => r.time <= maxTime && r.price <= maxPrice);
 
   if(filtered.length === 0){
-    document.getElementById("result").innerHTML = "<p>Inga rätter matchar dina val.</p>";
+    document.getElementById("result").innerHTML = "<p>Inga rätter matchar dina val. Testa att öka tid eller pris.</p>";
     return;
   }
 
@@ -72,11 +138,19 @@ function generateMeal() {
   document.getElementById("result").innerHTML = `
     <div class="card">
       <h2>${random.title}</h2>
-      <p>⏱ ${random.time} min</p>
-      <p>💰 ca ${random.price} kr</p>
+      <p class="meta">⏱ ${random.time} min | 💰 ca ${random.price} kr per portion</p>
+
       <h3>Ingredienser</h3>
       <ul>${random.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+
+      <h3>Så gör du</h3>
       <p>${random.instructions}</p>
+
+      <div class="affiliate">
+        <a href="https://www.mathem.se" target="_blank">
+          <button>🛒 Handla ingredienser online</button>
+        </a>
+      </div>
     </div>
   `;
 }
