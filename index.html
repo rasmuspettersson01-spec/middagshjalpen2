@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Middagshjälpen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .card {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🍽️ Middagshjälpen</h1>
+
+<label>Max tid (min)</label><br>
+<input type="number" id="maxTime" value="60"><br><br>
+
+<label>Max pris (kr/portion)</label><br>
+<input type="number" id="maxPrice" value="50"><br><br>
+
+<button onclick="generateMeal()">Slumpa middag</button>
+
+<div id="result"></div>
+
+<script>
+const recipes = [
+  {
+    title: "Kycklinggryta med ris",
+    time: 30,
+    price: 35,
+    ingredients: ["Kyckling", "Grädde", "Paprika", "Ris"],
+    instructions: "Stek kyckling. Tillsätt grönsaker och grädde. Låt puttra 15 min. Servera med ris."
+  },
+  {
+    title: "Tacos",
+    time: 20,
+    price: 40,
+    ingredients: ["Köttfärs", "Tacokrydda", "Tortilla", "Sallad"],
+    instructions: "Stek köttfärs med krydda. Servera i tortillas med sallad."
+  }
+];
+
+function generateMeal() {
+  const maxTime = parseInt(document.getElementById("maxTime").value);
+  const maxPrice = parseInt(document.getElementById("maxPrice").value);
+
+  const filtered = recipes.filter(r => r.time <= maxTime && r.price <= maxPrice);
+
+  if(filtered.length === 0){
+    document.getElementById("result").innerHTML = "<p>Inga rätter matchar dina val.</p>";
+    return;
+  }
+
+  const random = filtered[Math.floor(Math.random() * filtered.length)];
+
+  document.getElementById("result").innerHTML = `
+    <div class="card">
+      <h2>${random.title}</h2>
+      <p>⏱ ${random.time} min</p>
+      <p>💰 ca ${random.price} kr</p>
+      <h3>Ingredienser</h3>
+      <ul>${random.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+      <p>${random.instructions}</p>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
