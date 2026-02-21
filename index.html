@@ -2,35 +2,43 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<title>Middagshjälpen – Barnvänliga vardagsmiddagar</title>
+<title>Middagshjälpen – Barnvänliga vardagsrecept & veckoplan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Gratis veckoplan och barnvänliga vardagsmiddagar för familjer.">
+<meta name="description" content="Barnvänliga vardagsrecept med exakta mått och steg-för-steg instruktioner. Gratis veckoplan och inköpslista.">
 
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f8fafc}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f8fafc;color:#222}
 h1{margin-bottom:5px}
 .subtitle{color:#666;margin-bottom:25px}
 input,select{padding:10px;width:100%;margin-bottom:15px;border:1px solid #ddd;border-radius:8px}
 button{padding:12px 20px;border:none;border-radius:10px;cursor:pointer;margin-top:5px}
 .primary{background:#111;color:white}
 .secondary{background:#e5e7eb}
-.card{margin-top:25px;padding:20px;border-radius:14px;background:white;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
+.card{margin-top:25px;padding:25px;border-radius:14px;background:white;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
 .meta{color:#666;font-size:14px}
-a{text-decoration:none;color:#111}
-.recipe-link{display:block;padding:8px 0}
+ul{padding-left:20px}
 .footer{text-align:center;margin-top:60px;color:#777;font-size:14px}
+.recipe-title{margin-bottom:5px}
 </style>
 </head>
 <body>
 
 <h1>🍽️ Middagshjälpen</h1>
-<p class="subtitle">Slipp planera – få barnvänliga middagar och fullständiga recept.</p>
+<p class="subtitle">Barnvänliga vardagsrecept med tydliga mått och steg-för-steg instruktioner.</p>
 
 <label>Max tid (min)</label>
 <input type="number" id="maxTime" value="45">
 
 <label>Max pris (kr per portion)</label>
 <input type="number" id="maxPrice" value="60">
+
+<label>Exkludera allergi</label>
+<select id="allergy">
+<option value="">Ingen</option>
+<option value="gluten">Gluten</option>
+<option value="laktos">Laktos</option>
+<option value="ägg">Ägg</option>
+</select>
 
 <button class="primary" onclick="generateMeal()">Slumpa middag</button>
 <button class="secondary" onclick="generateWeek()">Skapa veckoplan</button>
@@ -39,103 +47,176 @@ a{text-decoration:none;color:#111}
 
 <div class="footer">
 <p>Stötta projektet ☕</p>
-<a href="swish://payment?phone=46702683881&amount=20&message=Stöd till Middagshjälpen">
-<button class="primary">💛 Swisha 20 kr</button>
-</a>
+<p>Swish: 0702683881</p>
 </div>
 
 <script>
 
-const recipes=[
+const recipes = [
+
 {
-id:"kycklinggryta",
+title:"Spaghetti & köttfärssås",
+time:35,
+price:35,
+allergens:["gluten"],
+ingredients:[
+"500 g nötfärs",
+"1 gul lök",
+"2 vitlöksklyftor",
+"400 g krossade tomater",
+"2 msk tomatpuré",
+"1 msk oregano",
+"Spaghetti 500 g",
+"Salt & peppar"
+],
+instructions:[
+"1. Koka spaghetti enligt anvisning.",
+"2. Hacka lök och vitlök.",
+"3. Stek köttfärsen tills genomstekt.",
+"4. Tillsätt lök och vitlök, stek 2 min.",
+"5. Häll i tomater, tomatpuré och kryddor.",
+"6. Låt puttra 15 minuter.",
+"7. Servera med spaghetti."
+]
+},
+
+{
 title:"Kycklinggryta med ris",
 time:30,
-price:35,
-ingredients:["600g kyckling","2 dl grädde","1 paprika","1 gul lök","Ris"],
-instructions:"1. Stek kyckling.\n2. Tillsätt paprika och lök.\n3. Häll på grädde och låt puttra 15 min.\n4. Servera med ris."
-},
-{
-id:"tacos",
-title:"Tacos",
-time:20,
 price:40,
-ingredients:["400g köttfärs","Tacokrydda","Tortilla","Sallad","Tomat"],
-instructions:"1. Stek köttfärs.\n2. Blanda med tacokrydda.\n3. Servera i tortilla med grönsaker."
+allergens:["laktos"],
+ingredients:[
+"600 g kycklingfilé",
+"1 röd paprika",
+"1 gul lök",
+"2 dl grädde",
+"1 msk curry",
+"3 dl ris",
+"Salt & peppar"
+],
+instructions:[
+"1. Koka ris enligt anvisning.",
+"2. Skär kyckling i bitar.",
+"3. Stek kyckling tills genomstekt.",
+"4. Tillsätt hackad lök och paprika.",
+"5. Häll i grädde och curry.",
+"6. Låt puttra 10 minuter.",
+"7. Servera med ris."
+]
 },
+
 {
-id:"korvstroganoff",
+title:"Tacos (familjefavorit)",
+time:20,
+price:45,
+allergens:["gluten"],
+ingredients:[
+"500 g köttfärs",
+"1 påse tacokrydda",
+"8 tortillabröd",
+"Sallad",
+"Tomat",
+"Riven ost",
+"Gräddfil"
+],
+instructions:[
+"1. Stek köttfärs.",
+"2. Tillsätt tacokrydda och vatten enligt paket.",
+"3. Hacka grönsaker.",
+"4. Servera i tortillas med valfria tillbehör."
+]
+},
+
+{
 title:"Korv Stroganoff",
 time:25,
 price:30,
-ingredients:["Falukorv","2 dl grädde","1 msk tomatpuré","Ris"],
-instructions:"1. Skär och stek korv.\n2. Tillsätt tomatpuré och grädde.\n3. Låt puttra 10 min.\n4. Servera med ris."
+allergens:["laktos"],
+ingredients:[
+"600 g falukorv",
+"1 gul lök",
+"2 msk tomatpuré",
+"2 dl grädde",
+"3 dl ris"
+],
+instructions:[
+"1. Koka ris.",
+"2. Skär korv i strimlor.",
+"3. Stek korv och lök.",
+"4. Tillsätt tomatpuré och grädde.",
+"5. Låt puttra 10 min.",
+"6. Servera med ris."
+]
+},
+
+{
+title:"Ugnsbakad lax",
+time:30,
+price:55,
+allergens:[],
+ingredients:[
+"600 g laxfilé",
+"1 citron",
+"800 g potatis",
+"2 msk olivolja",
+"Salt & peppar"
+],
+instructions:[
+"1. Sätt ugnen på 200°C.",
+"2. Dela potatis och blanda med olja.",
+"3. Lägg lax i ugnsform.",
+"4. Krydda och pressa citron över.",
+"5. Baka 20-25 min.",
+"6. Servera med potatis."
+]
 }
+
 ];
 
-function getParams(){
-const params=new URLSearchParams(window.location.search);
-return params.get("recept");
-}
+function filterRecipes(){
+const maxTime=parseInt(document.getElementById("maxTime").value);
+const maxPrice=parseInt(document.getElementById("maxPrice").value);
+const allergy=document.getElementById("allergy").value;
 
-function showRecipeById(id){
-const recipe=recipes.find(r=>r.id===id);
-if(!recipe)return;
-
-document.title=recipe.title+" – Middagshjälpen";
-
-document.getElementById("result").innerHTML=`
-<div class="card">
-<h2>${recipe.title}</h2>
-<p class="meta">⏱ ${recipe.time} min | 💰 ${recipe.price} kr</p>
-
-<h3>Ingredienser</h3>
-<ul>${recipe.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
-
-<h3>Så lagar du</h3>
-<p>${recipe.instructions.replace(/\n/g,"<br>")}</p>
-
-<br>
-<a href="https://www.mathem.se" target="_blank">
-<button class="primary">🛒 Handla ingredienser online</button>
-</a>
-
-<br><br>
-<a href="./">← Tillbaka</a>
-</div>
-`;
+return recipes.filter(r=>r.time<=maxTime && r.price<=maxPrice && (!allergy || !r.allergens.includes(allergy)));
 }
 
 function generateMeal(){
-const maxTime=parseInt(document.getElementById("maxTime").value);
-const maxPrice=parseInt(document.getElementById("maxPrice").value);
-
-const filtered=recipes.filter(r=>r.time<=maxTime && r.price<=maxPrice);
-
+const filtered=filterRecipes();
 if(filtered.length===0){
 document.getElementById("result").innerHTML="<p>Inga rätter matchar dina val.</p>";
 return;
 }
-
-const random=filtered[Math.floor(Math.random()*filtered.length)];
-window.history.pushState({}, "", "?recept="+random.id);
-showRecipeById(random.id);
+const meal=filtered[Math.floor(Math.random()*filtered.length)];
+renderRecipe(meal);
 }
 
 function generateWeek(){
-let week=[...recipes].sort(()=>0.5-Math.random()).slice(0,3);
-
+const filtered=filterRecipes();
+if(filtered.length<3){
+document.getElementById("result").innerHTML="<p>För få recept för veckoplan.</p>";
+return;
+}
+let week=[...filtered].sort(()=>0.5-Math.random()).slice(0,3);
 document.getElementById("result").innerHTML=`
 <div class="card">
 <h2>📅 Veckoplan</h2>
-${week.map(r=>`<a class="recipe-link" href="?recept=${r.id}">• ${r.title}</a>`).join("")}
-</div>
-`;
+${week.map(r=>`<p>• ${r.title}</p>`).join("")}
+</div>`;
 }
 
-const recipeFromUrl=getParams();
-if(recipeFromUrl){
-showRecipeById(recipeFromUrl);
+function renderRecipe(meal){
+document.getElementById("result").innerHTML=`
+<div class="card">
+<h2 class="recipe-title">${meal.title}</h2>
+<p class="meta">⏱ ${meal.time} min | 💰 ${meal.price} kr per portion</p>
+
+<h3>Ingredienser (4 portioner)</h3>
+<ul>${meal.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
+
+<h3>Gör så här</h3>
+${meal.instructions.map(step=>`<p>${step}</p>`).join("")}
+</div>`;
 }
 
 </script>
